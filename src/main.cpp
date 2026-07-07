@@ -180,63 +180,102 @@
 // void loop() {
 // }
 
+//------servo motor rotation-----
+// #include <Arduino.h>
+// #include <WiFi.h>
+// #include <ESPAsyncWebServer.h>
+// #include <ESP32Servo.h>
+
+// const char* ssid = "Airtel_Anjay";
+// const char* password = "Priyanka@10";
+
+// #define SERVO_PIN 13
+
+// Servo myServo;
+// AsyncWebServer server(80);
+
+// void setup()
+// {
+//     Serial.begin(115200);
+
+   
+//     myServo.attach(SERVO_PIN);
+//     myServo.write(0);      
+
+//     WiFi.begin(ssid, password);
+
+//     Serial.print("Connecting");
+
+//     while (WiFi.status() != WL_CONNECTED)
+//     {
+//         delay(500);
+//         Serial.print(".");
+//     }
+
+//     Serial.println();
+//     Serial.println("WiFi Connected");
+//     Serial.print("IP : ");
+//     Serial.println(WiFi.localIP());
+
+//     server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request)
+//     {
+//         Serial.println("Servo -> 360");
+//         myServo.write(360);
+
+//         request->send(200, "text/plain", "Servo at 360");
+//     });
+
+
+//     server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request)
+//     {
+//         Serial.println("Servo -> 0");
+//         myServo.write(0);
+
+//         request->send(200, "text/plain", "Servo at 0");
+//     });
+
+//     server.begin();
+//     Serial.println("Server Started");
+// }
+
+// void loop()
+// {
+// }
+
+// with push button
 #include <Arduino.h>
-#include <WiFi.h>
-#include <ESPAsyncWebServer.h>
 #include <ESP32Servo.h>
 
-const char* ssid = "Airtel_Anjay";
-const char* password = "Priyanka@10";
-
 #define SERVO_PIN 13
+#define BUTTON_PIN 4
 
-Servo myServo;
-AsyncWebServer server(80);
+Servo servo;
 
 void setup()
 {
     Serial.begin(115200);
 
-   
-    myServo.attach(SERVO_PIN);
-    myServo.write(0);      
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-    WiFi.begin(ssid, password);
+    servo.attach(SERVO_PIN);
 
-    Serial.print("Connecting");
+    servo.write(0);
 
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        Serial.print(".");
-    }
-
-    Serial.println();
-    Serial.println("WiFi Connected");
-    Serial.print("IP : ");
-    Serial.println(WiFi.localIP());
-
-    server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request)
-    {
-        Serial.println("Servo -> 90");
-        myServo.write(90);
-
-        request->send(200, "text/plain", "Servo at 90");
-    });
-
-
-    server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request)
-    {
-        Serial.println("Servo -> 0");
-        myServo.write(0);
-
-        request->send(200, "text/plain", "Servo at 0");
-    });
-
-    server.begin();
-    Serial.println("Server Started");
+    Serial.println("Ready...");
 }
 
 void loop()
 {
+    if (digitalRead(BUTTON_PIN) == LOW)
+    {
+        servo.write(180);
+        Serial.println("Button Pressed");
+    }
+    else
+    {
+        servo.write(0);
+        Serial.println("Button Released");
+    }
+
+    delay(100);
 }
